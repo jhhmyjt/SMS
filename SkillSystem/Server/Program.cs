@@ -1,7 +1,9 @@
 global using SkillSystem.Shared;
 global using Microsoft.EntityFrameworkCore;
+global using SkillSystem.Server.Services.AuthService;
+global using SkillSystem.Server.Data;
 using Microsoft.AspNetCore.ResponseCompression;
-using SkillSystem.Server.Data;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddRazorPages();
 //添加swaggerUI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+//添加服务
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 var app = builder.Build();
 

@@ -1,0 +1,9 @@
+﻿.show-menu{
+    display:block;
+}
+.dropdown-item:hover{
+    background-color:white;
+}
+.dropdown-menu a:hover {
+    text-decoration: underline;
+}

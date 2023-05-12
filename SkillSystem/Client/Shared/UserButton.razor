@@ -1,0 +1,28 @@
+﻿<div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle user-button"
+    @onclick="ToggleUserMenu"
+    @onfocusout="HideUserMenu"
+    >
+    <i class="oi oi-person"></i>
+    </button>
+    <div class="dropdown-menu dropdown-menu-end @UserMenuCssClass">
+        <a href="register" class="dropdown-item">注册</a>
+    </div>
+</div>
+
+@code {
+    private bool showUserMenu = false;//是否显示用户菜单
+    private string? UserMenuCssClass => showUserMenu ? "show-menu" : null;
+
+    private void ToggleUserMenu()
+    {
+        showUserMenu = !showUserMenu;
+    }
+
+    //当丢失焦点时延迟消失用户菜单方法
+    private async Task HideUserMenu()
+    {
+        await Task.Delay(200);
+        showUserMenu = false;
+    }
+}
