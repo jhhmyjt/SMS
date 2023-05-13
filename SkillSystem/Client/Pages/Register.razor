@@ -1,32 +1,46 @@
 ﻿@page "/register"
+@inject IAuthService AuthService
 
 <PageTitle>用户注册</PageTitle>
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
     <DataAnnotationsValidator></DataAnnotationsValidator>
     <h1 class="h3 mb-3 fw-normal">注册</h1>
+
     <div class="form-floating mb-3">
         <InputText id="emailInput" @bind-Value="user.Email" class="form-control" placeholder="name@example.com"></InputText>
         <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
         <label for="emailInput">邮箱</label>
     </div>
     <div class="form-floating mb-3">
-        <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control" placeholder="Password"></InputText>
+        <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control" type="password" placeholder="Password" ></InputText>
         <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
         <label for="passwrodInput">密码</label>
     </div>
     <div class="form-floating mb-3">
-        <InputText id="confirmPasswrodInput" @bind-Value="user.ConfirmPassword" class="form-control" placeholder="Confirm Password"></InputText>
+        <InputText id="confirmPasswrodInput" @bind-Value="user.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password"></InputText>
         <ValidationMessage For="@(()=>user.ConfirmPassword)"></ValidationMessage>
         <label for="confirmPasswrodInput">确认密码</label>
     </div>
     <button class="w-100 btn btn-lg btn-primary" type="submit">注册</button>
+    <p class="fs-6 pt-2 @messageCssClass">@message</p>
 </EditForm>
 
 @code {
     UserRegister user = new UserRegister();
-    void HandleRegistration()
+    private string message = string.Empty;
+    private string messageCssClass = string.Empty;
+    async Task HandleRegistration()
     {
-        Console.WriteLine($"Register User with Email {user.Email}.");
+        var result = await AuthService.Register(user);
+        message = result.Message;
+        if (!result.Success)
+        {
+            messageCssClass = "text-danger";
+        }
+        else
+        {
+            messageCssClass = "text-success";
+        }
     }
 }

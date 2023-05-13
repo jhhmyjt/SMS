@@ -1,0 +1,44 @@
+﻿@page "/login"
+@inject IAuthService AuthService
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
+
+<PageTitle>登录</PageTitle>
+<EditForm Model="user" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+    <h1 class="h3 mb-3 fw-normal">登录</h1>
+
+    <div class="form-floating mb-3">
+        <InputText id="emailInput" @bind-Value="user.Email" class="form-control mb-2" placeholder="name@example.com"></InputText>
+        <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
+        <label for="emailInput">邮箱</label>
+    </div>
+    <div class="form-floating mb-3">
+        <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control mb-2" type="password" placeholder="Password"></InputText>
+        <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
+        <label for="passwrodInput">密码</label>
+    </div>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">登录</button>
+    <p class="fs-6 pt-2 text-danger">@errorMessage</p>
+</EditForm>
+
+@code {
+    private UserLogin user = new UserLogin();
+    private string errorMessage = string.Empty;
+    private async Task HandleLogin()
+    {
+        var result = await AuthService.Login(user);
+        if (!result.Success)
+        {
+            errorMessage = result.Message;
+        }
+        else
+        {
+            errorMessage = string.Empty;
+            //使用本地存储记录Token
+            await LocalStorage.SetItemAsync("autoToken", result.Data);
+            //登录成功，导航至其他页面
+            NavigationManager.NavigateTo("");
+        }
+    }
+}
