@@ -30,7 +30,7 @@ namespace SkillSystem.Client
                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(
                         "Bearer",authToken.Replace("\"",""));//删除Token中的引号
                 }catch {
-                    //方法出错将认证删除
+                    //方法出错会将认证删除并重新生成一个身份
                     await _localStorage.RemoveItemAsync("authToken");
                     //身份刷新
                     identity = new ClaimsIdentity();

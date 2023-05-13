@@ -1,9 +1,9 @@
 global using SkillSystem.Shared;
 global using SkillSystem.Client.Services.AuthService;
+global using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SkillSystem.Client;
-using Blazored.LocalStorage;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
