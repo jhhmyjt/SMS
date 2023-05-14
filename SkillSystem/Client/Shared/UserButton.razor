@@ -1,4 +1,8 @@
-﻿<div class="dropdown">
+﻿@inject ILocalStorageService LocalStorage
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject NavigationManager NavigationManager
+
+<div class="dropdown">
     <button class="btn btn-primary dropdown-toggle user-button"
     @onclick="ToggleUserMenu"
     @onfocusout="HideUserMenu"
@@ -6,8 +10,16 @@
     <i class="oi oi-person"></i>
     </button>
     <div class="dropdown-menu dropdown-menu-end @UserMenuCssClass">
-        <a href="login" class="dropdown-item">登录</a>
-        <a href="register" class="dropdown-item">注册</a>
+        <AuthorizeView>
+            <Authorized>
+                <a href="profile" class="dropdown-item">个人信息</a>
+                <button class="dropdown-item" @onclick="Logout">注销</button>
+            </Authorized>
+            <NotAuthorized>
+                <a href="login" class="dropdown-item">登录</a>
+                <a href="register" class="dropdown-item">注册</a>
+            </NotAuthorized>
+        </AuthorizeView>
     </div>
 </div>
 
@@ -25,5 +37,13 @@
     {
         await Task.Delay(200);
         showUserMenu = false;
+    }
+
+    //注销账号
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        NavigationManager.NavigateTo("login");
     }
 }

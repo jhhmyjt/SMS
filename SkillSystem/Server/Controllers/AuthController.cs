@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace SkillSystem.Server.Controllers
 {
@@ -27,6 +28,17 @@ namespace SkillSystem.Server.Controllers
         {
             var response = await _authService.Login(request.Email, request.Password);
             if (!response.Success) { return BadRequest(response); }
+            return Ok(response);
+        }
+
+        //使用Authorize限定只有授权用户可以调用此方法
+        [HttpPost("change-password"),Authorize]
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword([FromBody] string newPassword)
+        {
+            //从JWT Token的payload中的主体信息获取用户id，代码：new Claim(ClaimTypes.NameIdentifier,user.Id.ToString())
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response=await _authService.ChangePassword(int.Parse(userId), newPassword);
+            if(!response.Success) { return BadRequest(response); }
             return Ok(response);
         }
     }

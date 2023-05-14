@@ -1,6 +1,7 @@
 global using SkillSystem.Shared;
 global using SkillSystem.Client.Services.AuthService;
 global using Blazored.LocalStorage;
+global using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SkillSystem.Client;
@@ -16,5 +17,10 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 
 //添加服务
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+//添加自定义认证状态提供器服务
+builder.Services.AddOptions();
+builder.Services.AddAuthorizationCore();
+builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
 await builder.Build().RunAsync();

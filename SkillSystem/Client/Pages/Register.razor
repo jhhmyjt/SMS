@@ -5,31 +5,44 @@
 
 <EditForm Model="user" OnValidSubmit="HandleRegistration">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <h1 class="h3 mb-3 fw-normal">注册</h1>
+    <div class="pt-5 pb-1 text-center">
+        <h2>注册用户</h2>
+        <p class="lead">请花一些时间填写下面的表格完成账号注册。</p>
+    </div>
 
-    <div class="form-floating mb-3">
-        <InputText id="emailInput" @bind-Value="user.Email" class="form-control" placeholder="name@example.com"></InputText>
-        <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
-        <label for="emailInput">邮箱</label>
+    <div class="mx-auto pt-1 login-outForm">
+        <div class="alert alert-success my-4 @successAlertCssClass" role="alert">
+            <h4 class="alert-heading">注册账号成功！</h4>
+            <p>快速跳转到 <a href="login" class="alert-link">登录</a>。</p>
+            <hr>
+            <p class="mb-0">欢迎您使用本系统。</p>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="emailInput" @bind-Value="user.Email" class="form-control" placeholder="name@example.com"></InputText>
+            <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
+            <label for="emailInput">邮箱</label>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control" type="password" placeholder="Password"></InputText>
+            <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
+            <label for="passwrodInput">密码</label>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="confirmPasswrodInput" @bind-Value="user.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password"></InputText>
+            <ValidationMessage For="@(()=>user.ConfirmPassword)"></ValidationMessage>
+            <label for="confirmPasswrodInput">确认密码</label>
+        </div>
+        <hr class="my-4">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">注册</button>
+        <p class="fs-6 pt-2 @messageCssClass">@message</p>
     </div>
-    <div class="form-floating mb-3">
-        <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control" type="password" placeholder="Password" ></InputText>
-        <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
-        <label for="passwrodInput">密码</label>
-    </div>
-    <div class="form-floating mb-3">
-        <InputText id="confirmPasswrodInput" @bind-Value="user.ConfirmPassword" class="form-control" type="password" placeholder="Confirm Password"></InputText>
-        <ValidationMessage For="@(()=>user.ConfirmPassword)"></ValidationMessage>
-        <label for="confirmPasswrodInput">确认密码</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">注册</button>
-    <p class="fs-6 pt-2 @messageCssClass">@message</p>
 </EditForm>
 
 @code {
     UserRegister user = new UserRegister();
     private string message = string.Empty;
     private string messageCssClass = string.Empty;
+    private string successAlertCssClass = "d-none";
     async Task HandleRegistration()
     {
         var result = await AuthService.Register(user);
@@ -37,10 +50,12 @@
         if (!result.Success)
         {
             messageCssClass = "text-danger";
+            successAlertCssClass = "d-none";
         }
         else
         {
-            messageCssClass = "text-success";
+            messageCssClass = "text-success d-none";
+            successAlertCssClass = "";
         }
     }
 }

@@ -2,8 +2,8 @@ global using SkillSystem.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using SkillSystem.Server.Services.AuthService;
 global using SkillSystem.Server.Data;
-using Microsoft.AspNetCore.ResponseCompression;
-
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +23,19 @@ builder.Services.AddSwaggerGen();
 
 //Ìí¼Ó·þÎñ
 builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+	.AddJwtBearer(options=>
+		options.TokenValidationParameters = new TokenValidationParameters
+		{
+			ValidateIssuerSigningKey = true,
+			IssuerSigningKey=new SymmetricSecurityKey(
+				System.Text.Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)),
+			ValidateIssuer=false,
+			ValidateAudience=false,
+		}
+	);
+
 
 var app = builder.Build();
 
@@ -48,6 +61,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 app.UseSwagger();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 
 app.MapRazorPages();

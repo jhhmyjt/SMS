@@ -7,3 +7,7 @@
 .dropdown-menu a:hover {
     color:dodgerblue;
 }
+
+.dropdown-menu button:hover {
+    color: dodgerblue;
+}

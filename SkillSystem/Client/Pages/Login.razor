@@ -2,24 +2,30 @@
 @inject IAuthService AuthService
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AutherticationStateProvider
 
 <PageTitle>登录</PageTitle>
 <EditForm Model="user" OnValidSubmit="HandleLogin">
     <DataAnnotationsValidator></DataAnnotationsValidator>
-    <h1 class="h3 mb-3 fw-normal">登录</h1>
+    <div class="pt-5 pb-1 text-center">
+        <h2>登录</h2>
+        <p class="lead">请输入您的邮箱和密码完成账号登录。</p>
+    </div>
 
-    <div class="form-floating mb-3">
-        <InputText id="emailInput" @bind-Value="user.Email" class="form-control mb-2" placeholder="name@example.com"></InputText>
-        <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
-        <label for="emailInput">邮箱</label>
+    <div class="mx-auto pt-1 login-outForm">
+        <div class="form-floating mb-3">
+            <InputText id="emailInput" @bind-Value="user.Email" class="form-control mb-2" placeholder="name@example.com"></InputText>
+            <ValidationMessage For="@(()=>user.Email)"></ValidationMessage>
+            <label for="emailInput">邮箱</label>
+        </div>
+        <div class="form-floating mb-3">
+            <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control mb-2" type="password" placeholder="Password"></InputText>
+            <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
+            <label for="passwrodInput">密码</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">登录</button>
+        <p class="fs-6 pt-2 text-danger">@errorMessage</p>
     </div>
-    <div class="form-floating mb-3">
-        <InputText id="passwrodInput" @bind-Value="user.Password" class="form-control mb-2" type="password" placeholder="Password"></InputText>
-        <ValidationMessage For="@(()=>user.Password)"></ValidationMessage>
-        <label for="passwrodInput">密码</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">登录</button>
-    <p class="fs-6 pt-2 text-danger">@errorMessage</p>
 </EditForm>
 
 @code {
@@ -36,7 +42,9 @@
         {
             errorMessage = string.Empty;
             //使用本地存储记录Token
-            await LocalStorage.SetItemAsync("autoToken", result.Data);
+            await LocalStorage.SetItemAsync("authToken", result.Data);
+            //获取身份认证
+            await AutherticationStateProvider.GetAuthenticationStateAsync();
             //登录成功，导航至其他页面
             NavigationManager.NavigateTo("");
         }

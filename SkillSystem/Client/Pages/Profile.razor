@@ -1,0 +1,39 @@
+﻿@page "/profile"
+@inject IAuthService AuthService
+@attribute [Authorize]
+
+<PageTitle>个人信息</PageTitle>
+<div class="pt-5 mb-5 text-center">
+    <h2>用户信息</h2>
+    <p class="lead">
+        <AuthorizeView>
+            <Authorized>
+            欢迎 @context.User.Identity.Name !
+            </Authorized>
+        </AuthorizeView>
+        您可以在此页面查看您的用户信息，您也可以随时修改它们。
+    </p>
+</div>
+<div class="row g-5">
+    <div class="col-7">
+        <h4 class="mb-3">基础信息</h4>
+        <p>此处为Form表单</p>
+        <hr class="my-4">
+        <button class="btn btn-outline-primary" type="submit">更新信息</button>
+    </div>
+    <div class="col-5">
+        <h4 class="mb-3">修改密码</h4>
+        <p>此处为修改密码Form表单</p>
+        <button class="btn btn-outline-primary" type="submit">更新密码</button>
+    </div>
+</div>
+
+@code {
+    UserChangePassword request = new UserChangePassword();
+    private string message = string.Empty;
+    private async Task ChangePassword()
+    {
+        var result = await AuthService.ChangePassword(request);
+        message = result.Message;
+    }
+}

@@ -111,5 +111,22 @@ namespace SkillSystem.Server.Services.AuthService
 
             return jwt;
         }
+
+        public async Task<ServiceResponse<bool>> ChangePassword(int userId, string newPassword)
+        {
+            var user=await _dataContext.Users.FindAsync(userId);
+            if(user == null)
+            {
+                return new ServiceResponse<bool> { Success = false, Message="未找到用户"};
+            }
+            //存在用户，修改密码。重新创建Hash
+            CreatePasswordHash(newPassword, out byte[] newPasswordHash, out byte[] newPasswordSalt);
+            user.PasswordSalt = newPasswordSalt;
+            user.PasswordHash = newPasswordHash;
+
+            await _dataContext.SaveChangesAsync();
+
+            return new ServiceResponse<bool> { Data = true ,Message="用户密码已修改"};
+        }
     }
 }
