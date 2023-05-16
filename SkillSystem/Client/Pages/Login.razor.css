@@ -1,21 +1,5 @@
 ﻿.login-outForm {
-    width: 75%
+    max-width:480px;
 }
 
-@media(min-width: 1020px) {
-    .login-outForm {
-        width: 60%
-    }
-}
 
-@media(min-width: 1220px) {
-    .login-outForm {
-        width: 50%
-    }
-}
-
-@media(min-width: 1400px) {
-    .login-outForm {
-        width: 40%
-    }
-}

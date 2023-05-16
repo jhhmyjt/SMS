@@ -9,7 +9,7 @@ namespace SkillSystem.Shared
 {
     public class UserLogin
     {
-        [Required(ErrorMessage = "请输入邮箱")]
+        [Required(ErrorMessage = "请输入邮箱"), EmailAddress(ErrorMessage = "请输入正确的邮箱地址")]
         public string Email { get; set;}=string.Empty;
         [Required(ErrorMessage = "请输入密码"), StringLength(100, MinimumLength = 6, ErrorMessage = "密码长度为6~100")]
         public string Password { get; set; } = string.Empty;
