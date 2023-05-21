@@ -6,20 +6,36 @@
 <div class="pt-5 mb-5 text-center">
     <h2>用户信息</h2>
     <p class="lead">
-        <AuthorizeView>
-            <Authorized>
-            欢迎 @context.User.Identity.Name !
-            </Authorized>
-        </AuthorizeView>
         您可以在此页面查看您的用户信息，您也可以随时修改它们。
     </p>
 </div>
 <div class="d-flex row g-5 mx-auto profile-form">
     <div class="col-md-7">
         <h4 class="mb-3 normal-info">基础信息</h4>
-        <p>此处为Form表单</p>
-        <hr class="my-4">
-        <button class="btn btn-outline-primary" type="submit">更新信息</button>
+        <EditForm Model="newInfo" OnValidSubmit="ChangeInfo">
+            <DataAnnotationsValidator></DataAnnotationsValidator>
+            <div class="py-1 text-center">
+                <p class="lead">信息有误可在下方修改</p>
+            </div>
+            <div class="mx-auto pt-1 login-outForm">
+                <div class="alert alert-success my-2 p-2 @successAlertCssClass2" role="alert">
+                    <h5 class="alert-heading">信息修改成功！</h5>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText id="passwrodInput" @bind-Value="newInfo.Name" class="form-control" type="text" placeholder="name"></InputText>
+                    <ValidationMessage For="@(()=>newInfo.Name)"></ValidationMessage>
+                    <label for="passwrodInput">姓名</label>
+                </div>
+                <div class="form-floating mb-3">
+                    <InputText id="confirmPasswrodInput" @bind-Value="newInfo.Phone" class="form-control" type="text" placeholder="phone"></InputText>
+                    <ValidationMessage For="@(()=>newInfo.Phone)"></ValidationMessage>
+                    <label for="confirmPasswrodInput">电话</label>
+                </div>
+                <hr class="my-4">
+                <button class="btn btn-outline-primary" type="submit">更新信息</button>
+                <p class="fs-6 pt-2 @messageCssClass">@message</p>
+            </div>
+        </EditForm>
     </div>
     <div class="col-md-5">
         <h4 class="mb-3">修改密码</h4>
@@ -52,8 +68,10 @@
 
 @code {
     UserChangePassword request = new UserChangePassword();
+    UserInfo newInfo = new UserInfo();
     private string messageCssClass = string.Empty;
     private string successAlertCssClass = "d-none";
+    private string successAlertCssClass2 = "d-none";
     private string message = string.Empty;
     private async Task ChangePassword()
     {
@@ -69,5 +87,24 @@
             messageCssClass = "text-success d-none";
             successAlertCssClass = "";
         }
+    }
+    private async Task ChangeInfo()
+    {
+        var result = await AuthService.ChangeInfo(newInfo);
+        message = result.Message;
+        if (!result.Success)
+        {
+            messageCssClass = "text-danger";
+            successAlertCssClass2 = "d-none";
+        }
+        else
+        {
+            messageCssClass = "text-success d-none";
+            successAlertCssClass2 = "";
+        }
+    }
+    protected override async Task OnParametersSetAsync()
+    {
+        //await AuthService.GetUserInfo();
     }
 }

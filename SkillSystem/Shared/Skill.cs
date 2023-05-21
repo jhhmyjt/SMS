@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace SkillSystem.Shared
 {
-    public class Job
+    public class Skill
     {
         public int Id { get; set; }
-        public string Name { get; set; } = string.Empty;
+        public string Name { get; set; }=string.Empty;
         public string Description { get; set; } = string.Empty;
-        public Department Department { get; set; }
-        public int DepartmentId { get; set; }
+        public List<SkillVariant> Variants { get; set; } = new List<SkillVariant>();
     }
 }

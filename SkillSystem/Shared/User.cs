@@ -17,5 +17,10 @@ namespace SkillSystem.Shared
         public DateTime DateCreated { get; set; } = DateTime.Now;
         //职位、部门
         public bool isSuper { get; set; } = false; //管理员标识符
+        public string Name { get; set; } = string.Empty; //员工姓名
+        public string Sex { get; set; } = "保密"; //员工性别
+        public string Phone { get; set; } = string.Empty; //员工电话
+        public Job Job { get; set; }
+        public int JobId { get; set; }  //job外键
     }
 }

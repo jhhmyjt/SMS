@@ -1,5 +1,6 @@
 ﻿@page "/"
 @attribute [Authorize]
+@inject IAuthService AuthService
 
 <PageTitle>岗位技能管理系统</PageTitle>
 
@@ -7,13 +8,25 @@
     <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
         <p class="fs-4">欢迎使用本系统</p>
     </header>
+    <div class="col-md-8">
+        <h2 class="text-body-emphasis">已报名的培训项目</h2>
+        <p>下面是您已报名的培训项目，请及时关注培训日期、类型等信息。</p>
+        <ul class="list-unstyled ps-0">
+            <li>
+                <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/icons-font" rel="noopener" target="_blank">
+                    <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
+                    Bootstrap npm starter
+                </a>
+            </li>
+        </ul>
+    </div>
 
     <hr class="col-3 col-md-2 mb-5">
 
     <div class="row g-5">
         <div class="col-md-6">
-            <h2 class="text-body-emphasis">Starter projects</h2>
-            <p>Ready to beyond the starter template? Check out these open source projects that you can quickly duplicate to a new GitHub repository.</p>
+            <h2 class="text-body-emphasis">报名参加培训</h2>
+            <p>以下培训可以报名参加</p>
             <ul class="list-unstyled ps-0">
                 <li>
                     <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/icons-font" rel="noopener" target="_blank">
@@ -43,8 +56,8 @@
         </div>
 
         <div class="col-md-6">
-            <h2 class="text-body-emphasis">Guides</h2>
-            <p>Read more detailed instructions and documentation on using or contributing to Bootstrap.</p>
+            <h2 class="text-body-emphasis">即将截至报名的培训</h2>
+            <p>以下培训即将截至报名</p>
             <ul class="list-unstyled ps-0">
                 <li>
                     <a class="icon-link mb-1" href="/docs/5.3/getting-started/introduction/">
@@ -80,4 +93,6 @@
         </div>
     </div>
 </div>
-
+@code {
+    
+}

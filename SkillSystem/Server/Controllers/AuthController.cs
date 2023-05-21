@@ -41,5 +41,13 @@ namespace SkillSystem.Server.Controllers
             if(!response.Success) { return BadRequest(response); }
             return Ok(response);
         }
+        [HttpPost("change-info"), Authorize]
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangeInfo([FromBody] UserInfo userInfo)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var response = await _authService.ChangeInfo(int.Parse(userId), userInfo.Name, userInfo.Phone);
+            if (!response.Success) { return BadRequest(response); }
+            return Ok(response);
+        }
     }
 }

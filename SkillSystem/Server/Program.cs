@@ -1,6 +1,7 @@
 global using SkillSystem.Shared;
 global using Microsoft.EntityFrameworkCore;
 global using SkillSystem.Server.Services.AuthService;
+global using SkillSystem.Server.Services.TrainingService;
 global using SkillSystem.Server.Data;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -23,6 +24,7 @@ builder.Services.AddSwaggerGen();
 
 //Ìí¼Ó·þÎñ
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<ITrainingService, TrainingService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options=>
@@ -36,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		}
 	);
 
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

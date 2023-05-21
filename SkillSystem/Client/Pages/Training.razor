@@ -1,6 +1,38 @@
 ﻿@page "/training"
-<h3>Training</h3>
+@attribute [Authorize]
+@inject ITrainingService TrainingService
+<div>
+    <h3>培训</h3>
+</div>
+@if (TrainingService.Trainings == null || TrainingService.Trainings.Count == 0)
+{
+	<h5>加载中……</h5>
+}
+else
+{
+	@foreach (var training in TrainingService.Trainings)
+	{
+		<div class="contentBox p-5 mb-4 bg-light rounded-3 d-flex">
+			<div class="py-3 ps-2">
+				<a href="/training/@training.Id">
+					<h5>
+						@training.Name
+					</h5>
+				</a>
+				<span class="badge text-bg-primary">@training.Status</span>
+				<span class="badge text-bg-dark">@training.Type</span>
+				<p class="fs-5">@training.Description</p>
+				<p class="fs-6">报名人数：@training.RegisterNumber，最大人数：@training.MaxCapacity</p>
+				<p class="fs-6">开始时间：@training.StartTime，结束时间：@training.EndTime</p>
+				<a href="/training/@training.Id" class="btn btn-outline-primary">前往报名</a>
+			</div>
+		</div>
+	}
+}
 
 @code {
-
+    protected override async Task OnParametersSetAsync()
+    {
+        await TrainingService.GetTrainings();
+    }
 }
