@@ -1,5 +1,45 @@
 ﻿@page "/my-trainings"
+@attribute [Authorize]
+@inject ITrainingService TrainingService
+
+<PageTitle>我的培训</PageTitle>
+
+<div>
+	<h3>我报名的培训</h3>
+</div>
+@if (TrainingService.TrainingItems == null || TrainingService.TrainingItems.Count == 0)
+{
+	<div class="spinner-border text-primary" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
+}
+else
+{
+	@foreach (var trainingItem in TrainingService.TrainingItems)
+	{
+		<div class="contentBox p-5 mb-4 bg-light rounded-3 d-flex">
+			<div class="py-3 ps-2">
+				<a href="/training/@trainingItem.Training.Id" class="link-offset-3">
+					<h4>
+						@trainingItem.Training.Name
+					</h4>
+				</a>
+				<span class="badge text-bg-primary">@trainingItem.Training.Status</span>
+				<span class="badge text-bg-dark">@trainingItem.Training.Type</span>
+				<p class="fs-5">@trainingItem.Training.Description</p>
+				<p class="fs-6">报名人数：@trainingItem.Training.RegisterNumber，最大人数：@trainingItem.Training.MaxCapacity</p>
+				<p class="fs-6">开始时间：@trainingItem.Training.StartTime，结束时间：@trainingItem.Training.EndTime</p>
+				<p class="fs-6">报名时间：@trainingItem.RegisterTime</p>
+				<p class="fs-6">最终成绩：@trainingItem.Score</p>
+				<a href="/training/@trainingItem.Training.Id" class="btn btn-outline-primary">查看详细信息</a>
+			</div>
+		</div>
+	}
+}
 
 @code {
-
+    protected override async Task OnParametersSetAsync()
+    {
+        await TrainingService.GetTrainingItems();
+    }
 }

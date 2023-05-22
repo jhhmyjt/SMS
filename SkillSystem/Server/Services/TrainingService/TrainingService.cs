@@ -3,6 +3,7 @@
     public class TrainingService : ITrainingService
     {
         private readonly DataContext _context;
+
         public TrainingService(DataContext dataContext)
         {
             _context = dataContext;
@@ -11,7 +12,12 @@
         public async Task<ServiceResponse<Training>> GetTraining(int trainingId)
         {
             var response=new ServiceResponse<Training>();
-            var training=await _context.Training.FirstOrDefaultAsync(t=>t.Id==trainingId);
+            var training=await _context.Training
+                .Include(t=>t.Course)
+                .ThenInclude(c=>c.Skill)
+                .ThenInclude(s=>s.Variants)
+                .ThenInclude(v=>v.SkillType)
+                .FirstOrDefaultAsync(t=>t.Id==trainingId);
             if (training == null)
             {
                 response.Success = false;
@@ -21,6 +27,18 @@
             {
                 response.Data = training;
             }
+            return response;
+        }
+
+        public async Task<ServiceResponse<List<TrainingItem>>> GetTrainingItems(int userId)
+        {
+            var response=new ServiceResponse<List<TrainingItem>>();
+            var items = await _context.TrainingItems.
+                Include(t=>t.Training).
+                Where(t => t.UserId == userId).
+                OrderByDescending(t => t.RegisterTime).
+                ToListAsync();
+            response.Data = items;
             return response;
         }
 

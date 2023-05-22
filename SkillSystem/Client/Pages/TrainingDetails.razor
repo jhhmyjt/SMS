@@ -1,6 +1,8 @@
 ﻿@page "/training/{id:int}"
 @inject ITrainingService TrainingService
 
+<PageTitle>培训</PageTitle>
+
 @if (training == null)
 {
     <p class="fs-5">@message</p>
@@ -18,6 +20,15 @@ else
                 <p class="fs-5">@training.Description</p>
                 <p class="fs-6">报名人数：@training.RegisterNumber，最大人数：@training.MaxCapacity</p>
                 <p class="fs-6">开始时间：@training.StartTime，结束时间：@training.EndTime</p>
+                <hr class="col-4 col-md-3 mb-1">
+                <p class="fs-5">培训课程：@training.Course.Name</p>
+                <p class="fs-6">@training.Course.Description</p>
+                <hr class="col-4 col-md-3 mb-1">
+                <p class="fs-5">所学技能：@training.Course.Skill.Name</p>
+                <p class="fw-light fs-6">@training.Course.Skill.Description</p>
+                <p class="fs-6">技能等级：@training.Course.SkillType.Name
+                    <span class="badge text-bg-warning">难度中等</span>
+                </p>
                 <div class="alert alert-success my-2 p-3 @successAlertCssClass" role="alert">
                     <h4 class="alert-heading">报名成功！</h4>
                     <p>您已成功报名该培训，请关注培训的相关信息</p>
@@ -26,7 +37,7 @@ else
                     <hr>
                     <p class="mb-0">祝您一切顺利</p>
                 </div>
-                <div class="d-grid gap-2 col-6 mx-auto">
+                <div class="d-grid gap-2 col-6 mx-auto mt-2">
                     <button class="btn btn-primary" type="submit">点击报名</button>
                 </div>
                 <p class="fs-6 pt-2 @messageCssClass">@errorMessage</p>

@@ -11,7 +11,9 @@ namespace SkillSystem.Server.Services.AuthService
         private readonly IConfiguration _configuration;//注入app setting使用设置中的密钥
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(DataContext dataContext, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+        public AuthService(DataContext dataContext, 
+            IConfiguration configuration, 
+            IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
             _dataContext = dataContext;
@@ -148,15 +150,6 @@ namespace SkillSystem.Server.Services.AuthService
             await _dataContext.SaveChangesAsync();
 
             return new ServiceResponse<bool> { Data = true, Message = "用户信息已修改" };
-        }
-
-        public int GetUserId() => int.Parse(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
-
-        public string GetUserEmail() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
-
-        public async Task<User> GetUserByEmail(string email)
-        {
-            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Email.Equals(email));
         }
     }
 }

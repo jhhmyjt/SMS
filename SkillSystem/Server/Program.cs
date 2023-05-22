@@ -38,6 +38,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 		}
 	);
 
+//添加HttpContext访问服务中的用户
 builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();

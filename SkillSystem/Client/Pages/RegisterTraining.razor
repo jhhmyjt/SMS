@@ -1,12 +1,16 @@
 ﻿@page "/training"
 @attribute [Authorize]
 @inject ITrainingService TrainingService
+
+<PageTitle>报名培训</PageTitle>
 <div>
     <h3>培训</h3>
 </div>
 @if (TrainingService.Trainings == null || TrainingService.Trainings.Count == 0)
 {
-	<h5>加载中……</h5>
+	<div class="spinner-border text-primary" role="status">
+		<span class="visually-hidden">Loading...</span>
+	</div>
 }
 else
 {
@@ -14,10 +18,10 @@ else
 	{
 		<div class="contentBox p-5 mb-4 bg-light rounded-3 d-flex">
 			<div class="py-3 ps-2">
-				<a href="/training/@training.Id">
-					<h5>
+				<a href="/training/@training.Id" class="link-offset-3">
+					<h4>
 						@training.Name
-					</h5>
+					</h4>
 				</a>
 				<span class="badge text-bg-primary">@training.Status</span>
 				<span class="badge text-bg-dark">@training.Type</span>
@@ -28,6 +32,9 @@ else
 			</div>
 		</div>
 	}
+	<p class="text-center">
+		<a href="/training/#">回到顶部</a>
+	</p>
 }
 
 @code {

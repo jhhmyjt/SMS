@@ -1,6 +1,7 @@
 ﻿@page "/"
 @attribute [Authorize]
 @inject IAuthService AuthService
+@inject ITrainingService TrainingService
 
 <PageTitle>岗位技能管理系统</PageTitle>
 
@@ -12,12 +13,28 @@
         <h2 class="text-body-emphasis">已报名的培训项目</h2>
         <p>下面是您已报名的培训项目，请及时关注培训日期、类型等信息。</p>
         <ul class="list-unstyled ps-0">
-            <li>
-                <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/icons-font" rel="noopener" target="_blank">
-                    <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                    Bootstrap npm starter
-                </a>
-            </li>
+            @if (TrainingService.TrainingItems == null)
+            {
+                <li>
+                    加载中……
+                </li>
+            }
+            else if (TrainingService.TrainingItems.Count == 0)
+            {
+                <li>
+                    暂未报名培训
+                </li>
+            }
+            else
+            {
+                @foreach(var trainingItem in TrainingService.TrainingItems)
+                {
+                    <li>
+                        <a class="link-offset-2" href="/training/@trainingItem.Training.Id">@trainingItem.Training.Name</a>
+                    </li>
+                }
+                
+            }
         </ul>
     </div>
 
@@ -28,30 +45,27 @@
             <h2 class="text-body-emphasis">报名参加培训</h2>
             <p>以下培训可以报名参加</p>
             <ul class="list-unstyled ps-0">
-                <li>
-                    <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/icons-font" rel="noopener" target="_blank">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap npm starter
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/parcel" rel="noopener" target="_blank">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Parcel starter
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/vite" rel="noopener" target="_blank">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Vite starter
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="https://github.com/twbs/examples/tree/main/webpack" rel="noopener" target="_blank">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Webpack starter
-                    </a>
-                </li>
+                @if (TrainingService.Trainings == null)
+                {
+                    <li>
+                        加载中……
+                    </li>
+                }
+                else if (TrainingService.Trainings.Count == 0)
+                {
+                    <li>
+                        暂无培训
+                    </li>
+                }
+                else
+                {
+                    @foreach (var training in TrainingService.Trainings)
+                    {
+                        <li>
+                            <a class="link-offset-2" href="/training/@training.Id">@training.Name</a>
+                        </li>
+                    }
+                }
             </ul>
         </div>
 
@@ -59,40 +73,35 @@
             <h2 class="text-body-emphasis">即将截至报名的培训</h2>
             <p>以下培训即将截至报名</p>
             <ul class="list-unstyled ps-0">
-                <li>
-                    <a class="icon-link mb-1" href="/docs/5.3/getting-started/introduction/">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap quick start guide
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="/docs/5.3/getting-started/webpack/">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Webpack guide
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="/docs/5.3/getting-started/parcel/">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Parcel guide
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="/docs/5.3/getting-started/vite/">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Bootstrap Vite guide
-                    </a>
-                </li>
-                <li>
-                    <a class="icon-link mb-1" href="/docs/5.3/getting-started/contribute/">
-                        <svg class="bi" width="16" height="16"><use xlink:href="#arrow-right-circle"></use></svg>
-                        Contributing to Bootstrap
-                    </a>
-                </li>
+                @if (TrainingService.Trainings == null)
+                {
+                    <li>
+                        加载中……
+                    </li>
+                }
+                else if (TrainingService.Trainings.Count == 0)
+                {
+                    <li>
+                        暂无培训
+                    </li>
+                }
+                else
+                {
+                    @foreach (var training in TrainingService.Trainings)
+                    {
+                        <li>
+                            <a class="link-offset-2" href="/training/@training.Id">@training.Name</a>
+                        </li>
+                    }
+                }
             </ul>
         </div>
     </div>
 </div>
 @code {
-    
+    protected override async Task OnParametersSetAsync()
+    {
+        await TrainingService.GetTrainingItems();
+        await TrainingService.GetTrainings();
+    }
 }

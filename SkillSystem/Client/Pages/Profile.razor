@@ -22,14 +22,14 @@
                     <h5 class="alert-heading">信息修改成功！</h5>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText id="passwrodInput" @bind-Value="newInfo.Name" class="form-control" type="text" placeholder="name"></InputText>
+                    <InputText id="name" @bind-Value="newInfo.Name" class="form-control" type="text" placeholder="name"></InputText>
                     <ValidationMessage For="@(()=>newInfo.Name)"></ValidationMessage>
-                    <label for="passwrodInput">姓名</label>
+                    <label for="name">姓名</label>
                 </div>
                 <div class="form-floating mb-3">
-                    <InputText id="confirmPasswrodInput" @bind-Value="newInfo.Phone" class="form-control" type="text" placeholder="phone"></InputText>
+                    <InputText id="phone" @bind-Value="newInfo.Phone" class="form-control" type="text" placeholder="phone"></InputText>
                     <ValidationMessage For="@(()=>newInfo.Phone)"></ValidationMessage>
-                    <label for="confirmPasswrodInput">电话</label>
+                    <label for="phone">电话</label>
                 </div>
                 <hr class="my-4">
                 <button class="btn btn-outline-primary" type="submit">更新信息</button>
