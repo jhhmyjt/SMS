@@ -1,0 +1,74 @@
+﻿@page "/training/{id:int}"
+@inject ITrainingService TrainingService
+
+@if (training == null)
+{
+    <p class="fs-5">@message</p>
+}
+else
+{
+    <div class="contentBox p-3 mb-4 bg-light d-flex">
+        <div class="container-fluid py-3">
+            <EditForm Model="training.Id" OnValidSubmit="RegisterTraining">
+                <h5>
+                    @training.Name
+                </h5>
+                <span class="badge text-bg-primary">@training.Status</span>
+                <span class="badge text-bg-dark">@training.Type</span>
+                <p class="fs-5">@training.Description</p>
+                <p class="fs-6">报名人数：@training.RegisterNumber，最大人数：@training.MaxCapacity</p>
+                <p class="fs-6">开始时间：@training.StartTime，结束时间：@training.EndTime</p>
+                <div class="alert alert-success my-2 p-3 @successAlertCssClass" role="alert">
+                    <h4 class="alert-heading">报名成功！</h4>
+                    <p>您已成功报名该培训，请关注培训的相关信息</p>
+                    <p>开始时间：@training.StartTime</p>
+                    <p>结束时间：@training.EndTime</p>
+                    <hr>
+                    <p class="mb-0">祝您一切顺利</p>
+                </div>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button class="btn btn-primary" type="submit">点击报名</button>
+                </div>
+                <p class="fs-6 pt-2 @messageCssClass">@errorMessage</p>
+            </EditForm>
+        </div>
+    </div>
+}
+
+@code {
+    private Training? training = null;
+    [Parameter]
+    public int Id { get; set; }
+    private string message = string.Empty;
+    private string errorMessage = string.Empty;
+    private string messageCssClass = string.Empty;
+    private string successAlertCssClass = "d-none";
+    protected override async Task OnParametersSetAsync()
+    {
+        message = "加载中……";
+        var result = await TrainingService.GetTraining(Id);
+        if (!result.Success)
+        {
+            message = result.Message;
+        }
+        else
+        {
+            training = result.Data;
+        }
+    }
+    private async Task RegisterTraining()
+    {
+        var result = await TrainingService.RegisterTraining(training.Id);
+        errorMessage = result.Message;
+        if (!result.Success)
+        {
+            messageCssClass = "text-danger";
+            successAlertCssClass = "d-none";
+        }
+        else
+        {
+            messageCssClass = "text-success d-none";
+            successAlertCssClass = "";
+        }
+    }
+}
