@@ -12,7 +12,7 @@ namespace SkillSystem.Shared
         //员工的技能执照，使用员工id和技能id作为复合主键
         public Skill? Skill { get; set; }
         public int SkillId { get; set; }
-        [JsonIgnore]
+        [JsonIgnore] 
         public User? User { get; set; }
         public int UserId { get; set; }
         public SkillType? SkillType { get; set; }
