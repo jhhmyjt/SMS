@@ -1,5 +1,6 @@
 ﻿@page "/profile"
 @inject IAuthService AuthService
+@inject ISkillService SkillService
 @attribute [Authorize]
 
 <PageTitle>个人信息</PageTitle>
@@ -12,6 +13,32 @@
 <div class="d-flex row g-5 mx-auto profile-form">
     <div class="col-md-7">
         <h4 class="mb-3 normal-info">基础信息</h4>
+        <div class="">
+            <p>姓名：@AuthService.UserDetails.Name</p>
+            <p>电话：@AuthService.UserDetails.Phone</p>
+            <p>性别：@AuthService.UserDetails.Sex</p>
+            <p>邮箱：@AuthService.UserDetails.Email</p>
+        </div>
+        <h4 class="mb-3 normal-info">岗位信息</h4>
+        <div class="">
+            <p>部门：@AuthService.UserDetails.Name</p>
+            <p>职位：@AuthService.UserDetails.Phone</p>
+        </div>
+        <h4 class="mb-3 normal-info">技能信息</h4>
+        <div class="">
+            <p>已获得的工作技能</p>
+            @if (SkillService.SkillLicenses == null || SkillService.SkillLicenses.Count == 0)
+            {
+                <p>暂无技能</p>
+            }
+            else
+            {
+                @foreach(var skillLicense in SkillService.SkillLicenses)
+                {
+                    <p>@skillLicense.Skill.Name @skillLicense.SkillType.Name ，获得时间： @skillLicense.GetTime</p>
+                }
+            }
+        </div>
         <EditForm Model="newInfo" OnValidSubmit="ChangeInfo">
             <DataAnnotationsValidator></DataAnnotationsValidator>
             <div class="py-1 text-center">
@@ -21,15 +48,15 @@
                 <div class="alert alert-success my-2 p-2 @successAlertCssClass2" role="alert">
                     <h5 class="alert-heading">信息修改成功！</h5>
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText id="name" @bind-Value="newInfo.Name" class="form-control" type="text" placeholder="name"></InputText>
+                <div class="mb-3">
+                    <label for="name" class="form-label">姓名</label>
+                    <InputText id="name" @bind-Value="newInfo.Name" class="form-control" type="text" placeholder="@AuthService.UserDetails.Name"></InputText>
                     <ValidationMessage For="@(()=>newInfo.Name)"></ValidationMessage>
-                    <label for="name">姓名</label>
                 </div>
-                <div class="form-floating mb-3">
-                    <InputText id="phone" @bind-Value="newInfo.Phone" class="form-control" type="text" placeholder="phone"></InputText>
-                    <ValidationMessage For="@(()=>newInfo.Phone)"></ValidationMessage>
-                    <label for="phone">电话</label>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">电话</label>
+                    <InputText id="phone" @bind-Value="newInfo.Phone" class="form-control" type="text" placeholder="@AuthService.UserDetails.Phone"></InputText>
+                    <ValidationMessage For="@(()=>newInfo.Phone)"></ValidationMessage> 
                 </div>
                 <hr class="my-4">
                 <button class="btn btn-outline-primary" type="submit">更新信息</button>
@@ -105,6 +132,7 @@
     }
     protected override async Task OnParametersSetAsync()
     {
-        //await AuthService.GetUserInfo();
+        await AuthService.GetUserDetails();
+        await SkillService.GetSkillLicense();
     }
 }

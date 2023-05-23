@@ -22,5 +22,6 @@ namespace SkillSystem.Shared
         public string Phone { get; set; } = string.Empty; //员工电话
         public Job Job { get; set; }
         public int JobId { get; set; }  //job外键
+        public List<SkillLicense> SkillLicenses { get; set; } = new List<SkillLicense>();
     }
 }

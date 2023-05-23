@@ -3,6 +3,7 @@ global using SkillSystem.Client.Services.AuthService;
 global using Blazored.LocalStorage;
 global using Microsoft.AspNetCore.Components.Authorization;
 global using SkillSystem.Client.Services.TrainingService;
+global using SkillSystem.Client.Services.SkillService;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using SkillSystem.Client;
@@ -19,6 +20,7 @@ builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.
 //添加服务
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
+builder.Services.AddScoped<ISkillService,SkillService>();
 
 //添加自定义认证状态提供器服务
 builder.Services.AddOptions();

@@ -151,5 +151,32 @@ namespace SkillSystem.Server.Services.AuthService
 
             return new ServiceResponse<bool> { Data = true, Message = "用户信息已修改" };
         }
+
+        public async Task<ServiceResponse<UserDetails>> GetUserDetails(int userId)
+        {
+            var response=new ServiceResponse<UserDetails>();
+            var user = await _dataContext.Users.FindAsync(userId);
+            if (user == null)
+            {
+                response.Success = false;
+                response.Message = "未找到用户";
+            }
+            //存在用户
+            else
+            {
+                var userDetails = new UserDetails
+                {
+                    Name = user.Name,
+                    Email = user.Email,
+                    DateCreated = user.DateCreated,
+                    UserId = user.Id,
+                    JobId = user.JobId,
+                    Phone = user.Phone,
+                    Sex = user.Sex
+                };
+                response.Data = userDetails;
+            }
+            return response;
+        }
     }
 }

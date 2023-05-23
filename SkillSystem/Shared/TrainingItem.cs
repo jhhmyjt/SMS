@@ -18,5 +18,7 @@ namespace SkillSystem.Shared
         public DateTime RegisterTime { get; set; } = DateTime.Now;  //报名的时间
         public int TrainingId { get; set; } //培训模板
         public Training Training { get; set; }
+        public bool isFinished { get; set; } = false;
+        public bool isPass { get; set; } = false;
     }
 }

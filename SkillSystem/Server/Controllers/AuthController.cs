@@ -49,5 +49,13 @@ namespace SkillSystem.Server.Controllers
             if (!response.Success) { return BadRequest(response); }
             return Ok(response);
         }
+
+        [HttpGet("get-user"), Authorize]
+        public async Task<ActionResult<ServiceResponse<UserDetails>>> GetUserDetails()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var result = await _authService.GetUserDetails(int.Parse(userId));
+            return result;
+        }
     }
 }

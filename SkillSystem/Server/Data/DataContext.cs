@@ -11,6 +11,7 @@ namespace SkillSystem.Server.Data
         {
             //为没有主键的SkillVariant模型创建复合主键
             modelBuilder.Entity<SkillVariant>().HasKey(s => new { s.SkillTypeId, s.SkillId });
+            modelBuilder.Entity<SkillLicense>().HasKey(s => new { s.UserId, s.SkillId });
             //填充SkillType数据
             modelBuilder.Entity<SkillType>().HasData(
                 new SkillType { Id = 1, Name = "一级" },
@@ -33,6 +34,10 @@ namespace SkillSystem.Server.Data
                 new SkillVariant { SkillId = 3, SkillTypeId = 4, Difficulty = "简单" },
                 new SkillVariant { SkillId = 4, SkillTypeId = 2, Difficulty = "简单" },
                 new SkillVariant { SkillId = 4, SkillTypeId = 4, Difficulty = "中等" }
+                );
+            modelBuilder.Entity<SkillLicense>().HasData(
+                new SkillLicense { SkillId = 2, UserId = 9, SkillTypeId = 4 },
+                new SkillLicense { SkillId = 3, UserId = 9, SkillTypeId = 4 }
                 );
             //填充Course课程数据
             modelBuilder.Entity<Course>().HasData(
@@ -219,6 +224,7 @@ namespace SkillSystem.Server.Data
         public DbSet<SkillVariant> SkillVariants { get; set; }
         public DbSet<Training> Training { get; set; }
         public DbSet<TrainingItem> TrainingItems { get; set; }
+        public DbSet<SkillLicense> SkillLicenses { get; set; }
         private void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             //使用密码加密算法
