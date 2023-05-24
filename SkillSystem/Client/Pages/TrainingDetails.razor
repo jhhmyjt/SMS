@@ -1,4 +1,5 @@
 ﻿@page "/training/{id:int}"
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject ITrainingService TrainingService
 
 <PageTitle>培训</PageTitle>
@@ -57,7 +58,17 @@ else
     protected override async Task OnParametersSetAsync()
     {
         message = "加载中……";
-        var result = await TrainingService.GetTraining(Id);
+        ServiceResponse<Training> result = null;
+        string role = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
+        .User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+        if (role.Contains("Admin"))
+        {
+            result = await TrainingService.GetAdminTraining(Id);
+        }
+        else
+        {
+            result = await TrainingService.GetTraining(Id);
+        }
         if (!result.Success)
         {
             message = result.Message;

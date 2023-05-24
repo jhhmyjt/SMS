@@ -1,0 +1,75 @@
+﻿@page "/admin/trainings"
+@inject ITrainingService TrainingService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")];
+
+<PageTitle>培训管理</PageTitle>
+
+<div>
+    <h3>培训管理</h3>
+</div>
+@if (TrainingService.AdminTrainings == null)
+{
+    <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+    </div>
+}
+else
+{
+    <button class="btn btn-outline-success my-3"
+        @onclick="CreateTraining">
+        添加新培训
+    </button>
+    <table class="table">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">培训</th>
+                <th scope="col">类型</th>
+                <th scope="col">报名人数</th>
+                <th scope="col">最大人数</th>
+                <th scope="col">可见</th>
+                <th scope="col">允许报名</th>
+                <th scope="col">已完成</th>
+                <th scope="col">正在进行</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <Virtualize Items="TrainingService.AdminTrainings" Context="training">
+                <tr>
+                    <th scope="row">@training.Id</th>
+                    <td>@training.Name</td>
+                    <td>@training.Type</td>
+                    <td class="ps-3">@training.RegisterNumber</td>
+                    <td>@training.MaxCapacity</td>
+                    <td class="text-center">@(@training.Visible ? "✔" : "")</td>
+                    <td class="text-center">@(@training.Registering ? "✔" : "")</td>
+                    <td class="text-center">@(@training.Finished ? "✔" : "")</td>
+                    <td class="text-center">@(@training.Going ? "✔" : "")</td>
+                    <td>
+                        <button class="btn btn-outline-success"
+                            @onclick="(()=>EditTraining(training.Id))">
+                            修改
+                        </button>
+                    </td>
+                </tr>
+            </Virtualize>
+        </tbody>
+    </table>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await TrainingService.GetAdminTraining();
+    }
+    void EditTraining(int trainingId)
+    {
+        NavigationManager.NavigateTo($"admin/training/{trainingId}");
+    }
+    void CreateTraining()
+    {
+        NavigationManager.NavigateTo("admin/training");
+    }
+}

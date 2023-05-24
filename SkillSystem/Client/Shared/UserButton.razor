@@ -13,6 +13,7 @@
         <AuthorizeView>
             <Authorized>
                 <a href="profile" class="dropdown-item">个人信息</a>
+                <AdminMenu></AdminMenu>
                 <button class="dropdown-item" @onclick="Logout">注销</button>
             </Authorized>
             <NotAuthorized>

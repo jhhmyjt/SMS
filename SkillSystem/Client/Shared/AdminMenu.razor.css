@@ -1,0 +1,11 @@
+﻿.dropdown-item:hover {
+    background-color: white;
+}
+
+.dropdown-menu a:hover {
+    color: dodgerblue;
+}
+
+.dropdown-menu button:hover {
+    color: dodgerblue;
+}

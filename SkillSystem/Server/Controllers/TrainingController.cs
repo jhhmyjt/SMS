@@ -18,7 +18,7 @@ namespace SkillSystem.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<Training>>>> GetTrainings()
         {
-            var result=await _trainingService.GetTrainings();
+            var result = await _trainingService.GetTrainings();
             return result;
         }
         [HttpGet("{trainingId}")]
@@ -27,7 +27,7 @@ namespace SkillSystem.Server.Controllers
             var result = await _trainingService.GetTraining(trainingId);
             return Ok(result);
         }
-        [HttpPost("register-training"),Authorize]
+        [HttpPost("register-training"), Authorize]
         public async Task<ActionResult<ServiceResponse<bool>>> ChangeInfo([FromBody] int trainingId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -40,6 +40,36 @@ namespace SkillSystem.Server.Controllers
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             var result = await _trainingService.GetTrainingItems(int.Parse(userId));
+            return result;
+        }
+        [HttpGet("admin/{trainingId}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Training>>> GetAdminTraining(int trainingId)
+        {
+            var result = await _trainingService.GetAdminTraining(trainingId);
+            return Ok(result);
+        }
+        [HttpGet("admin"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<List<Training>>>> GetAdminTrainings()
+        {
+            var result = await _trainingService.GetAdminTrainings();
+            return result;
+        }
+        [HttpDelete("admin/{id}"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteTraining(int id)
+        {
+            var result = await _trainingService.DeleteTraining(id);
+            return result;
+        }
+        [HttpPost("admin"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Training>>> CreateTraining(Training training)
+        {
+            var result = await _trainingService.CreateTraining(training);
+            return result;
+        }
+        [HttpPut("admin"), Authorize(Roles = "Admin")]
+        public async Task<ActionResult<ServiceResponse<Training>>> UpdateTraining(Training training)
+        {
+            var result = await _trainingService.UpdateTraining(training);
             return result;
         }
     }

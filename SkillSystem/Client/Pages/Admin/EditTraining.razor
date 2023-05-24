@@ -1,0 +1,39 @@
+﻿@page "/admin/training"
+@page "/admin/training/{id:int}"
+@inject ITrainingService TrainingService
+@inject NavigationManager NavigationManager
+@attribute [Authorize(Roles = "Admin")];
+
+<PageTitle>编辑培训</PageTitle>
+
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+    Training training = new Training(); //创建新培训时表单的模型
+    bool loading = true;   //加载的标识符
+    string btnText = string.Empty;  //提交按钮的文本，修改 或 添加
+    string message = "加载中……";
+    protected override async Task OnParametersSetAsync()
+    {
+        if (Id == 0)
+        {
+            //id为0，表示创建新培训
+            training = new Training { IsNew = true };
+            btnText = "创建新培训";
+        }
+        else
+        {
+            Training dbTraining = (await TrainingService.GetAdminTraining(Id)).Data;
+            if (dbTraining == null)
+            {
+                message = $"不存在id为{Id}的培训";
+                return;
+            }
+            training = dbTraining;
+            training.Editing = true;
+            btnText = "更新培训信息";
+        }
+        loading = false;
+    }
+}

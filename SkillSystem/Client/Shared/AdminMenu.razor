@@ -1,0 +1,19 @@
+﻿@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@if (authorized)
+{
+    <a href="admin/trainings" class="dropdown-item">培训管理</a>
+}
+
+@code {
+    bool authorized = false;
+    protected override async Task OnInitializedAsync()
+    {
+        string role = (await AuthenticationStateProvider.GetAuthenticationStateAsync())
+        .User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role).Value;
+        if (role.Contains("Admin"))
+        {
+            authorized = true;
+        }
+    }
+}
