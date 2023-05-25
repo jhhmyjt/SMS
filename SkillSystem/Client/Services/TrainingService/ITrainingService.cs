@@ -14,6 +14,6 @@
         Task GetAdminTraining();
         Task<Training> CreateTraining(Training training);
         Task<Training> UpdateTraining(Training training);
-        Task DeleteTraining(int trainingId);
+        Task DeleteTraining(Training training);
     }
 }

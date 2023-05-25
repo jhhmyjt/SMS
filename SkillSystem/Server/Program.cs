@@ -3,9 +3,11 @@ global using Microsoft.EntityFrameworkCore;
 global using SkillSystem.Server.Services.AuthService;
 global using SkillSystem.Server.Services.TrainingService;
 global using SkillSystem.Server.Services.SkillService;
+global using SkillSystem.Server.Services.CourseService;
 global using SkillSystem.Server.Data;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using SkillSystem.Server.Services.CourseService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +29,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<ITrainingService, TrainingService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
+builder.Services.AddScoped<ICourseService, CourseService>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options=>

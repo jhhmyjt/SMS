@@ -1,11 +1,111 @@
 ﻿@page "/admin/training"
 @page "/admin/training/{id:int}"
 @inject ITrainingService TrainingService
+@inject ICourseService CourseService
 @inject NavigationManager NavigationManager
 @attribute [Authorize(Roles = "Admin")];
 
 <PageTitle>编辑培训</PageTitle>
 
+@if (loading)
+{
+    <p>@message</p>
+}
+else
+{
+    @if (training.Editing)
+    {
+        <h3>编辑：@training.Name</h3>
+    }
+    else
+    {
+        <h3>创建一个新培训</h3>
+    }
+    <EditForm Model="training" OnValidSubmit="CreateOrUpdateTraining">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <div class="mx-auto pt-1 editForm">
+            <div class="mb-2">
+                <label for="name" class="form-label">名称</label>
+                <InputText id="name" @bind-Value="training.Name" class="form-control" type="text"></InputText>
+            </div>
+            <div class="mb-2">
+                <label for="type" class="form-label">类型</label>
+                <InputText id="type" @bind-Value="training.Type" class="form-control" type="text"></InputText>
+            </div>
+            <div class="mb-2">
+                <label for="status" class="form-label">状态</label>
+                <InputText id="status" @bind-Value="training.Status" class="form-control" type="text"></InputText>
+            </div>
+            <div class="mb-2">
+                <label for="desc" class="form-label">描述</label>
+                <InputTextArea id="desc" @bind-Value="training.Description" class="form-control" type="text"></InputTextArea>
+            </div>
+            <hr class="my-4">
+            <div class="mb-2">
+                <label for="course" class="form-label">培训课程</label>
+                <InputSelect id="course" @bind-Value="training.CourseId" class="form-control">
+                    @foreach(var course in CourseService.Courses)
+                    {
+                        <option value="@course.Id">@course.Name</option>
+                    }
+                </InputSelect>
+            </div>
+            <hr class="my-4">
+            <div class="mb-2">
+                <label for="startTime" class="form-label">开始时间</label>
+                <InputDate id="startTime" @bind-Value="training.StartTime" class="form-control"></InputDate>
+            </div>
+            <div class="mb-2">
+                <label for="endTime" class="form-label">结束时间</label>
+                <InputDate id="endTime" @bind-Value="training.EndTime" class="form-control"></InputDate>
+            </div>
+            <hr class="my-4">
+            <div class="mb-2">
+                <label for="maxNumber" class="form-label">最大人数</label>
+                <InputNumber id="maxNumber" @bind-Value="training.MaxCapacity" class="form-control"></InputNumber>
+            </div>
+            <hr class="my-4">
+            <div class="mb-2 form-check">
+                <label for="visible" class="form-check-label">可见性</label>
+                <InputCheckbox id="visible" @bind-Value="training.Visible" class="form-check-input"></InputCheckbox>
+            </div>
+            <div class="mb-2 form-check">
+                <label for="visible" class="form-check-label">进行中</label>
+                <InputCheckbox id="visible" @bind-Value="training.Going" class="form-check-input"></InputCheckbox>
+            </div>
+            <div class="mb-2 form-check">
+                <label for="visible" class="form-check-label">报名中</label>
+                <InputCheckbox id="visible" @bind-Value="training.Registering" class="form-check-input"></InputCheckbox>
+            </div>
+            <hr class="my-4">
+            <div class="mb-2">
+                <button class="btn btn-outline-primary" type="submit">@btnText</button>
+                @if (!training.IsNew)
+                {
+                    <button class="btn btn-outline-danger ms-5" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal">删除培训</button>
+                }
+            </div>
+            <ValidationSummary></ValidationSummary>
+        </div>
+    </EditForm>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="deleteModalLabel">删除培训：@training.Name</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    确认删除培训：@training.Name ？
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" @onclick="DeleteTraining">删除</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [Parameter]
@@ -14,6 +114,10 @@
     bool loading = true;   //加载的标识符
     string btnText = string.Empty;  //提交按钮的文本，修改 或 添加
     string message = "加载中……";
+    protected override async Task OnInitializedAsync()
+    {
+        await CourseService.GetCourses();
+    }
     protected override async Task OnParametersSetAsync()
     {
         if (Id == 0)
@@ -35,5 +139,24 @@
             btnText = "更新培训信息";
         }
         loading = false;
+    }
+    async void CreateOrUpdateTraining()
+    {
+        if (training.IsNew)
+        {
+            var result = await TrainingService.CreateTraining(training);
+            NavigationManager.NavigateTo($"admin/training/{result.Id}");
+        }
+        else
+        {
+            training.IsNew = false;
+            training = await TrainingService.UpdateTraining(training);
+            NavigationManager.NavigateTo($"admin/training/{training.Id}", true);
+        }
+    }
+    async void DeleteTraining()
+    {
+        await TrainingService.DeleteTraining(training);
+        NavigationManager.NavigateTo("admin/trainings", true);
     }
 }

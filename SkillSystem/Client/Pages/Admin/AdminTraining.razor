@@ -43,10 +43,10 @@ else
                     <td>@training.Type</td>
                     <td class="ps-3">@training.RegisterNumber</td>
                     <td>@training.MaxCapacity</td>
-                    <td class="text-center">@(@training.Visible ? "✔" : "")</td>
-                    <td class="text-center">@(@training.Registering ? "✔" : "")</td>
-                    <td class="text-center">@(@training.Finished ? "✔" : "")</td>
-                    <td class="text-center">@(@training.Going ? "✔" : "")</td>
+                    <td class="text-center">@(@training.Visible ? "✅" : "❌")</td>
+                    <td class="text-center">@(@training.Registering ? "✅" : "❌")</td>
+                    <td class="text-center">@(@training.Finished ? "✅" : "❌")</td>
+                    <td class="text-center">@(@training.Going ? "✅" : "❌")</td>
                     <td>
                         <button class="btn btn-outline-success"
                             @onclick="(()=>EditTraining(training.Id))">

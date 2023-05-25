@@ -25,9 +25,9 @@ namespace SkillSystem.Client.Services.TrainingService
             return newTraining;
         }
 
-        public async Task DeleteTraining(int trainingId)
+        public async Task DeleteTraining(Training training)
         {
-            var result = await _httpClient.DeleteAsync($"api/training/admin/{trainingId}");
+            var result = await _httpClient.DeleteAsync($"api/training/admin/{training.Id}");
         }
 
         public async Task<Training> UpdateTraining(Training training)

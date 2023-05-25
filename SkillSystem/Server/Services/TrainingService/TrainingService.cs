@@ -139,17 +139,16 @@
                 };
             }
             dbTraining.EndTime = training.EndTime;
+            dbTraining.StartTime = training.StartTime;
             dbTraining.Name = training.Name;
             dbTraining.Description = training.Description;
             dbTraining.MaxCapacity = training.MaxCapacity;
-            dbTraining.RegisterNumber = training.RegisterNumber;
             dbTraining.CourseId = training.CourseId;
             dbTraining.Type = training.Type;
             dbTraining.Status = training.Status;
             dbTraining.Visible = training.Visible;
             dbTraining.Going = training.Going;
             dbTraining.Registering = training.Registering;
-            dbTraining.Finished = training.Finished;
 
             await _context.SaveChangesAsync();
             return new ServiceResponse<Training> { Data = training };
